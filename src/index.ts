@@ -1,0 +1,19 @@
+import cors from "cors";
+import express from "express";
+import helmet from "helmet";
+import morgan from "morgan";
+import connectdb from "./config/database.js";
+import { env } from "./config/env.js";
+import router from "./routes/index.js";
+import { notFoundMiddleware } from "./middlewares/notFoundMiddleware.js";
+const app = express();
+connectdb();
+app.use(helmet());
+app.use(cors({ origin: "*" }));
+app.use(morgan("dev"));
+app.use(express.json());
+app.use("/api", router);
+app.use(notFoundMiddleware);
+app.listen(env.PORT, () => {
+  console.log(`Server initiated on PORT ${env.PORT}`);
+});
