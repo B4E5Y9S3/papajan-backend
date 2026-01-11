@@ -38,6 +38,7 @@ const userSchema = new Schema(
     username: {
       type: String,
       required: true,
+      lowercase: true,
       unique: true,
       index: true,
     },
@@ -47,6 +48,7 @@ const userSchema = new Schema(
     },
     lastName: {
       type: String,
+      default: "",
     },
     gender: {
       type: String,
@@ -60,7 +62,7 @@ const userSchema = new Schema(
       select: false,
     },
     role: { type: String, default: "customer" },
-    image: { type: String, default: " " },
+    image: { type: String, default: "" },
     address: [addressSchema],
   },
   {

@@ -2,6 +2,7 @@ import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
+import cookieParser from "cookie-parser";
 import connectdb from "./config/database.js";
 import { env } from "./config/env.js";
 import router from "./routes/index.js";
@@ -12,6 +13,7 @@ app.use(helmet());
 app.use(cors({ origin: "*" }));
 app.use(morgan("dev"));
 app.use(express.json());
+app.use(cookieParser());
 app.use("/api", router);
 app.use(notFoundMiddleware);
 app.listen(env.PORT, () => {
