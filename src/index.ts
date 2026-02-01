@@ -7,6 +7,7 @@ import connectdb from "./config/database.js";
 import { env } from "./config/env.js";
 import router from "./routes/index.js";
 import { notFoundMiddleware } from "./middlewares/notFoundMiddleware.js";
+import { globalErrorHandler } from "./middlewares/globalError.middleware.js";
 const app = express();
 connectdb();
 app.use(helmet());
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/api", router);
 app.use(notFoundMiddleware);
+app.use(globalErrorHandler);
 app.listen(env.PORT, () => {
   console.log(`Server initiated on PORT ${env.PORT}`);
 });

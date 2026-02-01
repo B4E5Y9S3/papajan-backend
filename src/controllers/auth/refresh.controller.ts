@@ -44,7 +44,6 @@ export async function refreshController(req: Request, res: Response) {
       revoked: false,
       expiresAt: new Date(Date.now() + REFRESH_EXPIRY_MS),
     });
-
     const newAccessToken = signAccessToken(payload);
     const newRefreshToken = signRefreshToken({ userId, tokenId: newTokenId });
     return res

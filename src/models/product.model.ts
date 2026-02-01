@@ -20,7 +20,7 @@ const ProductItemSchema = new Schema(
       },
     ],
   },
-  { _id: true }
+  { _id: true },
 );
 
 const ProductSchema = new Schema(
@@ -30,10 +30,11 @@ const ProductSchema = new Schema(
 
     brand: { type: Types.ObjectId, ref: "Brand", required: true },
     categoryId: { type: Types.ObjectId, ref: "Category", required: true },
-
-    coupon: String,
+    slug: { type: String, required: true },
+    coupon: { type: String },
     discountPercentage: { type: Number, default: 0 },
-
+    isActive: { type: Boolean, default: true },
+    deletedAt: { type: Date, default: null },
     rating: {
       avg: { type: Number, default: 0 },
       count: { type: Number, default: 0 },
@@ -51,12 +52,14 @@ const ProductSchema = new Schema(
       required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 ProductSchema.index({ name: 1 });
 ProductSchema.index({ brand: 1 });
 ProductSchema.index({ categoryId: 1 });
+ProductSchema.index({ slug: 1 }, { unique: true });
+ProductSchema.index({ isActive: 1 });
 ProductSchema.index({ "items.sku": 1 });
 
 export const ProductModel = model("Product", ProductSchema);
