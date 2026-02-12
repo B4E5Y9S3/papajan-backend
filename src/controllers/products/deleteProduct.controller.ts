@@ -5,7 +5,7 @@ import { AppError } from "../../services/appError.js";
 import { objectId } from "./productValidation.js";
 export async function deleteProduct(req: Request, res: Response) {
   // this will only be a soft delete not Hard delete
-  const { id } = z.object({ id: objectId }).parse(req.body);
+  const { id } = z.object({ id: objectId }).parse(req.params);
   const doc = await ProductModel.findOneAndUpdate(
     { _id: id, isActive: true },
     { isActive: false, deletedAt: new Date() },

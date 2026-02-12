@@ -9,9 +9,10 @@ import { authAdminMiddleware } from "../middlewares/auth.admin.middleware.js";
 
 const router = Router();
 
-router.get("/getBrands", getAllBrandsController);
-router.get("/getBrand", getBrandController);
-router.post("/brandNew", authAdminMiddleware, createBrandController);
-router.delete("/brandDelete", authAdminMiddleware, deleteBrandController);
+router.get("/", getAllBrandsController);
+router.post("/", authAdminMiddleware, createBrandController);
+
+router.get("/:id", getBrandController);
+router.delete("/:id", authAdminMiddleware, deleteBrandController);
 
 export default router;

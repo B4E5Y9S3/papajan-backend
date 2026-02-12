@@ -7,7 +7,7 @@ import { authAdminMiddleware } from "../middlewares/auth.admin.middleware.js";
 
 const router = Router();
 
-router.post("/productNew", authAdminMiddleware, CreateProductController);
-router.put("/productUpdate", authAdminMiddleware, updateProductController);
-router.delete("/productDelete", authAdminMiddleware, deleteProduct);
+router.post("/", authAdminMiddleware, CreateProductController);
+router.put("/", authAdminMiddleware, updateProductController);
+router.delete("/:id", authAdminMiddleware, deleteProduct);
 export default router;

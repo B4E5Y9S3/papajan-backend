@@ -11,7 +11,7 @@ import { globalErrorHandler } from "./middlewares/globalError.middleware.js";
 const app = express();
 connectdb();
 app.use(helmet());
-app.use(cors({ origin: "*" }));
+app.use(cors({ origin: env.CLIENT_URL }));
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
