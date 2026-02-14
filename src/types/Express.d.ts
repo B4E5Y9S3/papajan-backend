@@ -1,6 +1,7 @@
 import "express";
+import type { Types } from "mongoose";
 export interface AuthJwtPayload {
-  id: number;
+  id: Types.ObjectId;
   role: string;
   iat?: number;
   exp?: number;

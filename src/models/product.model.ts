@@ -1,12 +1,11 @@
-import { Schema, model, Types } from "mongoose";
+import { model, Schema, Types } from "mongoose";
 
 const ProductItemSchema = new Schema(
   {
     sku: { type: String, required: true },
 
     price: { type: Number, required: true },
-    inStock: { type: Number, required: true },
-
+    stock: { type: Number, required: true },
     options: {
       type: Map,
       of: String,
