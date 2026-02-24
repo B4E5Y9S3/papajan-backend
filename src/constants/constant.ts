@@ -5,3 +5,5 @@ export const REFRESH_EXPIRY = "30d";
 
 export const ACCESS_EXPIRY_MS = ms(ACCESS_EXPIRY); // For expiry validation
 export const REFRESH_EXPIRY_MS = ms(REFRESH_EXPIRY); // For expiry validation
+
+export const PAGINATION_LIMIT_MAX = 20;

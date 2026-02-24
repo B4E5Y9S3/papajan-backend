@@ -17,7 +17,7 @@ const ProductItemSchema = z.object({
   sku: z.string().min(4),
 
   price: z.number().positive(),
-  inStock: z.number().int().nonnegative(),
+  stock: z.number().int().nonnegative(),
 
   options: z.record(z.string().min(1), z.string().min(1)),
 

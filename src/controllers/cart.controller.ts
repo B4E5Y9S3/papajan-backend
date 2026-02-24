@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { mongo } from "mongoose";
+import { mongo, Types } from "mongoose";
 import z from "zod";
 import { CartModel } from "../models/cart.model.js";
 import { ProductModel } from "../models/product.model.js";
@@ -20,15 +20,77 @@ export async function getCartsController(req: Request, res: Response) {
     return res
       .status(401)
       .json({ message: "user is not authorized", ok: false });
-  const userCartDoc = await CartModel.findOne({ userId });
-  if (!userCartDoc)
+  const page = req.pagination?.page ?? 1;
+  const limit = req.pagination?.limit ?? 10;
+  const offset = (page - 1) * limit;
+  // if no filtering better use this
+  // const userCartDoc = await CartModel.findOne({ userId }).select({
+  //   items: { $slice: [offset, limit] },
+  // });
+
+  // Aggregation pipeline and Filter
+  const pipeline: any[] = [
+    { $match: { userId: new Types.ObjectId(userId) } },
+
+    { $unwind: "$items" },
+  ];
+
+  const paginationPrice = req.pagination?.filters?.price;
+  if (paginationPrice)
+    pipeline.push({
+      $match: {
+        "items.price": {
+          ...paginationPrice,
+        },
+      },
+    });
+  const paginationSearch = req.pagination?.filters?.name;
+  if (paginationSearch)
+    pipeline.push({
+      $match: {
+        "items.name": paginationSearch,
+      },
+    });
+  // disassemble
+  pipeline.push(
+    {
+      $facet: {
+        paginatedItems: [
+          { $unwind: "$items" },
+          { $skip: offset },
+          { $limit: limit },
+          {
+            $group: {
+              _id: "$_id",
+              items: { $push: "$items" },
+            },
+          },
+        ],
+        cartMeta: [{ $limit: 1 }], // checks if user cart exist
+      },
+    },
+    // Reassemble or output data structure
+    {
+      $project: {
+        _id: { $arrayElemAt: ["$cartMeta._id", 0] },
+        userId,
+        items: {
+          $ifNull: [{ $arrayElemAt: ["$paginatedItems.items", 0] }, []], // if null return empty Array
+        },
+      },
+    },
+  );
+
+  const result = await CartModel.aggregate(pipeline);
+
+  if (!result)
     return res.json({
       message: "User don't have any cart entry in Database",
       ok: false,
     });
   return res
     .status(200)
-    .json({ message: "user cart retrived", ok: true, cart: userCartDoc });
+    .json({ message: "user cart retrived", ok: true, cart: result[0] });
 }
 
 export async function addToCartController(req: Request, res: Response) {

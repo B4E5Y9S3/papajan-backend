@@ -5,10 +5,11 @@ import {
   removeFromCartController,
   updateCartItemQuantity,
 } from "../controllers/cart.controller.js";
+import PaginationMiddleware from "../middlewares/pagination.middleware.js";
 
 const router = Router();
 
-router.get("/", getCartsController);
+router.get("/", PaginationMiddleware, getCartsController);
 router.post("/", addToCartController);
 router.patch("/:productId", updateCartItemQuantity);
 router.delete("/", removeFromCartController);

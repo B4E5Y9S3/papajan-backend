@@ -3,7 +3,6 @@ import { model, Schema, Types } from "mongoose";
 const ProductItemSchema = new Schema(
   {
     sku: { type: String, required: true },
-
     price: { type: Number, required: true },
     stock: { type: Number, required: true },
     options: {
